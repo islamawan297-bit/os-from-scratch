@@ -1,0 +1,128 @@
+// Prisma Schema for OS from Scratch Full-Stack Platform
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String   // Hashed with bcrypt
+  role      Role     @default(USER)
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  progress UserProgress[]
+  projects UserProject[]
+}
+
+model Topic {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  lessons Lesson[]
+}
+
+model Lesson {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  module      String
+  level       String   // "Beginner" | "Intermediate" | "Advanced"
+  duration    String
+  summary     String
+  content     String   // Technical markdown
+  codeSnippet String?
+  sequence    Int      @default(0)
+  topicId     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  topic    Topic?         @relation(fields: [topicId], references: [id])
+  progress UserProgress[]
+}
+
+model Project {
+  id                String   @id @default(cuid())
+  slug              String   @unique
+  title             String
+  difficulty        String   // "Beginner" | "Intermediate" | "Advanced"
+  techStack         String   // Comma separated list
+  description       String
+  githubUrl         String
+  architectureSpecs String
+  setupGuide        String
+  createdAt         DateTime @default(now())
+
+  userProjects UserProject[]
+}
+
+model CodeExample {
+  id            String   @id @default(cuid())
+  presetId      String   @unique
+  title         String
+  language      String   // "assembly" | "c"
+  code          String
+  registers     String   // JSON string of default registers
+  memoryHex     String   // JSON string of hex dump
+  vgaText       String   // JSON string of screen matrix
+  logs          String   // JSON string of logs
+  createdAt     DateTime @default(now())
+}
+
+model UserProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  lessonId    String
+  isCompleted Boolean  @default(true)
+  completedAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+}
+
+model UserProject {
+  id        String   @id @default(cuid())
+  userId    String
+  projectId String
+  status    String   @default("SAVED") // "SAVED" | "BUILDING" | "COMPLETED"
+  savedAt   DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectId])
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model Newsletter {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}

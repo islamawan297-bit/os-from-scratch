@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-jetbrains: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-inter: 'Inter', sans-serif;
+}
+
+body {
+  background-color: #070a12;
+  color: #e2e8f0;
+  font-family: var(--font-inter);
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #090d16;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e2942;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00f2fe;
+}
+
+/* Glowing Glass Card Utilities */
+.glass-panel {
+  background: rgba(13, 19, 34, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(30, 41, 66, 0.8);
+}
+
+.glass-panel-glow {
+  background: rgba(13, 19, 34, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 242, 254, 0.25);
+  box-shadow: 0 0 25px -5px rgba(0, 242, 254, 0.15);
+}
+
+.os-gradient-text {
+  background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #10b981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.os-gradient-border {
+  border-image: linear-gradient(to right, #00f2fe, #8b5cf6) 1;
+}
+
+/* CRT Scanline Effect Overlay */
+.crt-overlay {
+  position: relative;
+}
+
+.crt-overlay::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+  background-size: 100% 4px;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+/* Code highlight container */
+pre, code {
+  font-family: var(--font-jetbrains);
+}
+
+/* Terminal Cursor animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 18px;
+  background-color: #00f2fe;
+  margin-left: 4px;
+  vertical-align: middle;
+  animation: blink 1s step-end infinite;
+}
