@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 import { LESSONS_DATA } from "@/lib/data/mockData";
 
+export function generateStaticParams() {
+  return LESSONS_DATA.map((lesson) => ({
+    slug: lesson.slug,
+  }));
+}
+
 export async function GET(
   request: Request,
   { params }: { params: { slug: string } }
